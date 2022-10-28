@@ -1,5 +1,6 @@
 const express = require('express');
 const mongoose= require('mongoose');
+const checkLogin = require('../middlewares/LoginCheck');
 const router=express.Router();
 const todoSchema=require('../schemas/todoSchema');
 
@@ -66,7 +67,9 @@ router.get('/name',async(req,res)=>{
    
 
 //get all the todos
-router.get('/',(req,res)=>{
+router.get('/',checkLogin,(req,res)=>{
+    console.log(req.username);
+    console.log(req.userId);
  Todo.find({}).select({
     _id:0,
     date:0
