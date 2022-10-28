@@ -6,11 +6,68 @@ const todoSchema=require('../schemas/todoSchema');
 //model    
 const Todo=new mongoose.model("Todo",todoSchema);
 
+// instance method
+router.get('/active',async(req,res)=>{
+    const todo=new Todo();
+    try{
+        const data= await todo.findActiveData();
+          res.status(200).json({
+              data:data,
+              message:"showing"
+          })
+      }
+      catch(err){
+          res.status(500).json({
+              error:'There was a server side error!'
+          })
+  
+      }
+   
+  
+});
 
+
+
+router.get('/active-callback',(req,res)=>{
+    const todo=new Todo();
+   todo.findActiveDataCB((err,data)=>{
+      res.status(200).json({
+        data
+      })
+    });
+   
+  
+});
+
+
+
+// statics
+router.get('/js',async(req,res)=>{
+ 
+ const data=await Todo.findByJs();
+ res.status(200).json({
+    data
+ })
+   
+  
+});
+
+
+// queryhelper 
+router.get('/name',async(req,res)=>{
+ 
+    const data=await Todo.find().findByJs('amir');
+    res.status(200).json({
+       data
+    })
+      
+     
+   });
+   
 
 //get all the todos
-router.get('/',async(req,res)=>{
-await Todo.find({}).select({
+router.get('/',(req,res)=>{
+ Todo.find({}).select({
     _id:0,
     date:0
 }).limit(2).exec((err,data)=>{
@@ -45,19 +102,21 @@ await Todo.find({}).select({
 });
 //  get a todo by id 
 router.get('/:id',async(req,res)=>{
-await Todo.find({"_id":req.params.id},(err,data)=>{
-    if(err){
-        res.status(500).json({
-            error:'There was a server side error!'
-        })
-    }
-    else{
+    try{
+      const data=  await Todo.find({"_id":req.params.id});
         res.status(200).json({
             data:data,
             message:"showing"
         })
     }
-}).clone()
+    catch(err){
+        res.status(500).json({
+            error:'There was a server side error!'
+        })
+
+    }
+  
+
 });
 
 //post todo

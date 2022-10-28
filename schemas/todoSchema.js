@@ -18,4 +18,26 @@ date:{
 
 
 })
+
+todoSchema.methods={
+    findActiveData:()=>{
+return mongoose.model('Todo').find({"status":"active"});
+    },
+
+    findActiveDataCB:(cb)=>{
+        return mongoose.model('Todo').find({"status":"inactive"},cb);
+            }
+};
+todoSchema.statics={
+    findByJs:function(){
+        return this.find({title:/js/i});
+    }
+}
+
+todoSchema.query={
+    findByJs:function(name){
+        return this.find({title:new RegExp(name,"i")});
+    }
+}
+
 module.exports=todoSchema;
