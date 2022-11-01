@@ -1,13 +1,14 @@
 const express = require('express');
 const mongoose=require('mongoose');
 const dotenv=require('dotenv');
-
 const todoHandler=require('./routeHandler/todoHandler');
 const userHandler=require('./routeHandler/userHandler');
 
 const app = express();
 dotenv.config()
 app.use(express.json());
+
+
 mongoose
 .connect('mongodb://localhost/todos')
 .then(()=>console.log('Mongo connection successful'))

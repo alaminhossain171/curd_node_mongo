@@ -31,44 +31,44 @@ router.post('/signup', async (req, res) => {
 
 
 router.post('/login', async (req, res) => {
-  try{
+    try {
 
-const user = await User.find({ username: req.body.username });
-
-
-if(user && user.length>0){
-    const isValidPassword = await bcrypt.compare(req.body.password, user[0].password);
-
-if(isValidPassword){
-const token = jwt.sign({
-        username: user[0].username,
-        userId: user[0]._id,
-    }, process.env.JWT_SECRET, {
-        expiresIn: '1h'
-    });;
-
-    res.status(200).json({
-        'your_token':token,
-        'message':'login successfully'
-    })
+        const user = await User.find({ username: req.body.username });
 
 
-}
-else{
-    res.status(401).json({
-        'error':'auth fail !!!'
-    }) 
-}
+        if (user && user.length > 0) {
+            const isValidPassword = await bcrypt.compare(req.body.password, user[0].password);
 
-}
+            if (isValidPassword) {
+                const token = jwt.sign({
+                    username: user[0].username,
+                    userId: user[0]._id,
+                }, process.env.JWT_SECRET, {
+                    expiresIn: '1h'
+                });;
+
+                res.status(200).json({
+                    'your_token': token,
+                    'message': 'login successfully'
+                })
 
 
-  }
-  catch{
-    res.status(401).json({
-        'error':'auth fail !!!'
-    })
-  }
+            }
+            else {
+                res.status(401).json({
+                    'error': 'auth fail !!!'
+                })
+            }
+
+        }
+
+
+    }
+    catch {
+        res.status(401).json({
+            'error': 'auth fail !!!'
+        })
+    }
 })
 
 
